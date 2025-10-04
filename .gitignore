@@ -13,3 +13,6 @@ vscode/.
 
 # Arquivos de dependências (se aplicável, para outras linguagens)
 node_modules/
+
+design.excalidraw
+design.png
