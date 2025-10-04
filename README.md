@@ -1,6 +1,6 @@
 passo a passo pro backend
 
-Instale o uv:
+Instale o uv (windows):
 ```
 irm https://astral.sh/uv/install.ps1 | iex
 ```
