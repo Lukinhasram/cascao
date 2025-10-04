@@ -1,2 +1,15 @@
-design.excalidraw
-design.png
+# Ambiente Virtual
+.venv/
+venv/
+*.env
+
+# Arquivos de Cache do Python
+__pycache__/
+*.pyc
+
+# Arquivos de IDEs
+.idea/
+vscode/.
+
+# Arquivos de dependências (se aplicável, para outras linguagens)
+node_modules/
