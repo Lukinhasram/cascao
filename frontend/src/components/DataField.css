@@ -38,7 +38,7 @@
 /* Slider visualization */
 .slider-visualization {
   margin-bottom: 1.5rem;
-  padding: 1rem;
+  padding: 1rem 1rem 1rem 1rem;
   background: #f8f9fa;
   border-radius: 8px;
 }
@@ -46,7 +46,7 @@
 .slider-label {
   font-size: 0.9rem;
   color: #7f8c8d;
-  margin-bottom: 0.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .slider-track {

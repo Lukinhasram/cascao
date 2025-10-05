@@ -9,18 +9,18 @@ interface DatePickerProps {
 
 const DatePicker: React.FC<DatePickerProps> = ({ day, month, onDateChange }) => {
   const months = [
-    { value: 1, label: 'Janeiro' },
-    { value: 2, label: 'Fevereiro' },
-    { value: 3, label: 'Março' },
-    { value: 4, label: 'Abril' },
-    { value: 5, label: 'Maio' },
-    { value: 6, label: 'Junho' },
-    { value: 7, label: 'Julho' },
-    { value: 8, label: 'Agosto' },
-    { value: 9, label: 'Setembro' },
-    { value: 10, label: 'Outubro' },
-    { value: 11, label: 'Novembro' },
-    { value: 12, label: 'Dezembro' }
+    { value: 1, label: 'January' },
+    { value: 2, label: 'February' },
+    { value: 3, label: 'March' },
+    { value: 4, label: 'April' },
+    { value: 5, label: 'May' },
+    { value: 6, label: 'June' },
+    { value: 7, label: 'July' },
+    { value: 8, label: 'August' },
+    { value: 9, label: 'September' },
+    { value: 10, label: 'October' },
+    { value: 11, label: 'November' },
+    { value: 12, label: 'December' }
   ];
 
   // Get max days for selected month (simple version, doesn't account for leap years)
@@ -47,14 +47,14 @@ const DatePicker: React.FC<DatePickerProps> = ({ day, month, onDateChange }) => 
 
   return (
     <div className="date-picker">
-      <h3 className="date-title">📅 Selecione a Data</h3>
+      <h3 className="date-title">Select Date</h3>
       <p className="date-instruction">
-        Escolha o dia e mês para análise climática histórica
+        Choose the day and month for historical climate analysis
       </p>
 
       <div className="date-selectors">
         <div className="selector-group">
-          <label htmlFor="day-select">Dia:</label>
+          <label htmlFor="day-select">Day:</label>
           <select
             id="day-select"
             value={day}
@@ -70,7 +70,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ day, month, onDateChange }) => 
         </div>
 
         <div className="selector-group">
-          <label htmlFor="month-select">Mês:</label>
+          <label htmlFor="month-select">Month:</label>
           <select
             id="month-select"
             value={month}
@@ -88,10 +88,10 @@ const DatePicker: React.FC<DatePickerProps> = ({ day, month, onDateChange }) => 
 
       <div className="date-info">
         <p>
-          <strong>Data selecionada:</strong> {day} de {months[month - 1].label}
+          <strong>Selected date:</strong> {months[month - 1].label} {day}
         </p>
         <p className="date-note">
-          ⓘ A análise usará dados históricos para este dia específico ao longo de vários anos
+          The analysis will use historical data for this specific day across multiple years
         </p>
       </div>
     </div>

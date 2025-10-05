@@ -24,11 +24,11 @@ const UserInputForm: React.FC<UserInputFormProps> = ({
 
   return (
     <div className="user-input-form">
-      <h2>Configure suas Preferências Ideais</h2>
+      <h2>Configure Your Ideal Preferences</h2>
       
       <div className="input-group">
         <label htmlFor="temperature-slider">
-          <span className="label-text">Temperatura Ideal</span>
+          <span className="label-text">Ideal Temperature</span>
           <span className="value-display">{preferences.idealTemperature}°C</span>
         </label>
         <input
@@ -45,7 +45,7 @@ const UserInputForm: React.FC<UserInputFormProps> = ({
 
       <div className="input-group">
         <label htmlFor="rain-slider">
-          <span className="label-text">Chuva Ideal</span>
+          <span className="label-text">Ideal Rain</span>
           <span className="value-display">{preferences.idealRain}mm</span>
         </label>
         <input
@@ -62,7 +62,7 @@ const UserInputForm: React.FC<UserInputFormProps> = ({
 
       <div className="input-group">
         <label htmlFor="wind-slider">
-          <span className="label-text">Vento Ideal</span>
+          <span className="label-text">Ideal Wind</span>
           <span className="value-display">{preferences.idealWindSpeed}m/s</span>
         </label>
         <input
@@ -79,7 +79,7 @@ const UserInputForm: React.FC<UserInputFormProps> = ({
 
       <div className="input-group">
         <label htmlFor="humidity-slider">
-          <span className="label-text">Umidade Ideal</span>
+          <span className="label-text">Ideal Humidity</span>
           <span className="value-display">{preferences.idealHumidity}%</span>
         </label>
         <input
@@ -99,7 +99,7 @@ const UserInputForm: React.FC<UserInputFormProps> = ({
         onClick={onSubmit}
         disabled={loading}
       >
-        {loading ? 'Carregando...' : 'Analisar Clima'}
+        {loading ? 'Loading...' : 'Analyze Climate'}
       </button>
     </div>
   );

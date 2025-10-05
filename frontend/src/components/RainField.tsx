@@ -14,23 +14,36 @@ const RainField: React.FC<RainFieldProps> = ({
   // Determine if the ideal rain matches the probability
   const isLikelyRainy = rainProbability.probability_percent > 50;
   const comparisonText = idealRain > 10 && !isLikelyRainy
-    ? `Probabilidade de chuva é baixa (${rainProbability.probability_percent.toFixed(1)}%), mas você prefere chuva`
+    ? `Rain probability is low (${rainProbability.probability_percent.toFixed(1)}%), but you prefer rain`
     : idealRain < 5 && isLikelyRainy
-    ? `Probabilidade de chuva é alta (${rainProbability.probability_percent.toFixed(1)}%), mas você prefere clima seco`
-    : `Condições de chuva adequadas às suas preferências`;
+    ? `Rain probability is high (${rainProbability.probability_percent.toFixed(1)}%), but you prefer dry weather`
+    : `Rain conditions match your preferences`;
 
   return (
     <div className="data-field rain-field">
-      <h3 className="field-title">🌧️ Chuva</h3>
+      <h3 className="field-title">Rain</h3>
       
       {/* Slider visualization */}
       <div className="slider-visualization">
-        <div className="slider-label">chuva ideal</div>
+        <div className="slider-label">ideal rain</div>
         <div className="slider-track">
           <div 
             className="slider-thumb"
             style={{ left: `${(idealRain / 50) * 100}%` }}
-          />
+          >
+            <div style={{ 
+              position: 'absolute', 
+              top: '-35px', 
+              left: '50%', 
+              transform: 'translateX(-50%)',
+              fontSize: '1rem',
+              fontWeight: '600',
+              color: '#2c3e50',
+              whiteSpace: 'nowrap'
+            }}>
+              {idealRain}mm
+            </div>
+          </div>
         </div>
         <div className="slider-range">
           <span>0mm</span>
@@ -40,33 +53,32 @@ const RainField: React.FC<RainFieldProps> = ({
 
       {/* Probability panel */}
       <div className="info-panel most-likely">
-        <div className="panel-label">probabilidade de chuva:</div>
+        <div className="panel-label">rain probability:</div>
         <div className="panel-main-value">{rainProbability.probability_percent.toFixed(1)}%</div>
         <div className="panel-comparison">{comparisonText}</div>
       </div>
 
       {/* Statistics panel */}
       <div className="info-panel probability">
-        <div className="panel-icon">📊</div>
         <div className="panel-content">
           <div className="probability-text">
-            "Nos últimos {rainProbability.frequency_analysis.total_days} anos, choveu {rainProbability.rainy_days_count} vezes 
-            neste dia (mais de {rainProbability.threshold_mm}mm). Isso significa que há uma probabilidade de {rainProbability.probability_percent.toFixed(1)}% 
-            de chuva significativa."
+            Over the past {rainProbability.frequency_analysis.total_days} years, it rained {rainProbability.rainy_days_count} times 
+            on this day (more than {rainProbability.threshold_mm}mm). This means there's a {rainProbability.probability_percent.toFixed(1)}% 
+            probability of significant rain.
           </div>
         </div>
       </div>
 
       {/* Days breakdown */}
       <div className="info-panel stats-breakdown">
-        <div className="panel-header">Histórico de Dias</div>
+        <div className="panel-header">Historical Days</div>
         <div className="stats-grid">
           <div className="stat-item">
-            <div className="stat-label">Dias com Chuva</div>
+            <div className="stat-label">Rainy Days</div>
             <div className="stat-value">{rainProbability.rainy_days_count}</div>
           </div>
           <div className="stat-item">
-            <div className="stat-label">Dias Secos</div>
+            <div className="stat-label">Dry Days</div>
             <div className="stat-value">{rainProbability.dry_days_count}</div>
           </div>
         </div>

@@ -19,7 +19,7 @@ export const climateService = {
     
     try {
       const response = await axios.get<ClimateAnalysisResponse>(
-        `${API_BASE_URL}/climate-analysis`,
+        `${API_BASE_URL}/v1/climate-analysis`,
         { params }
       );
       console.log('✅ Climate data received:', response.data);

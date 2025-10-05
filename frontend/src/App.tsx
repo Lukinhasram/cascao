@@ -52,7 +52,7 @@ function App() {
       });
       setClimateData(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erro ao buscar dados climáticos');
+      setError(err instanceof Error ? err.message : 'Error fetching climate data');
       console.error('Error fetching climate data:', err);
     } finally {
       setLoading(false);
@@ -62,10 +62,15 @@ function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Cascão</h1>
-        <p className="subtitle">
-          Análise climática histórica baseada em dados da NASA
-        </p>
+        <div className="header-logo">
+          <img src="/logo.svg" alt="Cascão Logo" className="logo" />
+        </div>
+        <div className="header-content">
+          <h1>Cascão</h1>
+          <p className="subtitle">
+            Historical climate analysis based on NASA data
+          </p>
+        </div>
       </header>
 
       <main className="app-main">
@@ -90,21 +95,21 @@ function App() {
 
         {error && (
           <div className="error-message">
-            <strong>Erro:</strong> {error}
+            <strong>Error:</strong> {error}
           </div>
         )}
 
         {climateData && (
           <div className="climate-results">
             <div className="results-header">
-              <h2>Resultados da Análise Climática</h2>
+              <h2>Climate Analysis Results</h2>
               <p className="analysis-period">
-                Baseado em {climateData.analysis_period.total_years_analyzed} anos de dados 
+                Based on {climateData.analysis_period.total_years_analyzed} years of data 
                 ({climateData.analysis_period.start_year} - {climateData.analysis_period.end_year})
               </p>
               <div className="confidence-badge">
-                Confiança: {climateData.summary_statistics.confidence_level === 'high' ? 'Alta' : 
-                           climateData.summary_statistics.confidence_level === 'medium' ? 'Média' : 'Baixa'}
+                Confidence: {climateData.summary_statistics.confidence_level === 'high' ? 'High' : 
+                           climateData.summary_statistics.confidence_level === 'medium' ? 'Medium' : 'Low'}
               </div>
             </div>
 
@@ -134,7 +139,7 @@ function App() {
 
         {!climateData && !loading && !error && (
           <div className="welcome-message">
-            <p>👆 Configure suas preferências ideais acima e clique em "Analisar Clima" para ver as estatísticas!</p>
+            <p>Configure your ideal preferences above and click "Analyze Climate" to see the statistics!</p>
           </div>
         )}
       </main>
