@@ -74,17 +74,19 @@ function App() {
       </header>
 
       <main className="app-main">
-        <LocationPicker
-          lat={location.lat}
-          lon={location.lon}
-          onLocationChange={handleLocationChange}
-        />
+        <div className="location-date-container">
+          <LocationPicker
+            lat={location.lat}
+            lon={location.lon}
+            onLocationChange={handleLocationChange}
+          />
 
-        <DatePicker
-          day={date.day}
-          month={date.month}
-          onDateChange={handleDateChange}
-        />
+          <DatePicker
+            day={date.day}
+            month={date.month}
+            onDateChange={handleDateChange}
+          />
+        </div>
 
         <UserInputForm
           preferences={preferences}

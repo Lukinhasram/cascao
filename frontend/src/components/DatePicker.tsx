@@ -54,22 +54,6 @@ const DatePicker: React.FC<DatePickerProps> = ({ day, month, onDateChange }) => 
 
       <div className="date-selectors">
         <div className="selector-group">
-          <label htmlFor="day-select">Day:</label>
-          <select
-            id="day-select"
-            value={day}
-            onChange={(e) => handleDayChange(Number(e.target.value))}
-            className="date-select"
-          >
-            {days.map(d => (
-              <option key={d} value={d}>
-                {d}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="selector-group">
           <label htmlFor="month-select">Month:</label>
           <select
             id="month-select"
@@ -80,6 +64,22 @@ const DatePicker: React.FC<DatePickerProps> = ({ day, month, onDateChange }) => 
             {months.map(m => (
               <option key={m.value} value={m.value}>
                 {m.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="selector-group">
+          <label htmlFor="day-select">Day:</label>
+          <select
+            id="day-select"
+            value={day}
+            onChange={(e) => handleDayChange(Number(e.target.value))}
+            className="date-select"
+          >
+            {days.map(d => (
+              <option key={d} value={d}>
+                {d}
               </option>
             ))}
           </select>
