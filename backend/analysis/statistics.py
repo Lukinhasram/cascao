@@ -18,7 +18,7 @@ def process_csv_data(list_of_csvs: list[str]) -> pd.DataFrame:
         ValueError: If no valid data is found in the CSV files
     """
     if not list_of_csvs:
-        raise ValueError("A lista de CSVs da NASA chegou vazia.")
+        raise ValueError("NASA CSV list is empty.")
 
     list_of_dfs = []
     for i, csv_text in enumerate(list_of_csvs):
@@ -33,10 +33,10 @@ def process_csv_data(list_of_csvs: list[str]) -> pd.DataFrame:
                     df.replace(-999, pd.NA, inplace=True)
                     list_of_dfs.append(df)
         except Exception as e:
-            print(f"Erro ao processar o CSV #{i + 1}: {e}")
+            print(f"Error processing CSV #{i + 1}: {e}")
 
     if not list_of_dfs:
-        raise ValueError("Nenhum dado válido foi encontrado nos arquivos da NASA após o processamento.")
+        raise ValueError("No valid data found in NASA files after processing.")
 
     df_full = pd.concat(list_of_dfs, ignore_index=True).dropna()
 
@@ -51,7 +51,7 @@ def process_csv_data(list_of_csvs: list[str]) -> pd.DataFrame:
     df_full.rename(columns=rename_map, inplace=True)
 
     if len(df_full) == 0:
-        raise ValueError("Nenhum dado válido restou após a limpeza de valores ausentes.")
+        raise ValueError("No valid data remaining after cleaning missing values.")
     
     return df_full
 
@@ -90,6 +90,27 @@ def calculate_climate_statistics(df: pd.DataFrame, lat: float, lon: float) -> di
     # Percentis de temperatura
     temp_10th_percentile = round(np.percentile(temp_max_values, 10), 2)
     temp_90th_percentile = round(np.percentile(temp_max_values, 90), 2)
+    
+    # Variabilidade ano a ano - para medir consistência climática
+    # Calcula o desvio padrão das temperaturas máximas para entender a variabilidade anual
+    yearly_temp_variability = round(temp_max_values.std(), 2)
+    
+    # Coeficiente de variação para normalizar a variabilidade pela média
+    temp_coefficient_variation = round((yearly_temp_variability / avg_max_temp) * 100, 2) if avg_max_temp > 0 else 0
+    
+    # Classificação da variabilidade baseada no coeficiente de variação
+    if temp_coefficient_variation < 5:
+        variability_classification = "very_consistent"
+        variability_description = "Temperature very consistent year after year"
+    elif temp_coefficient_variation < 10:
+        variability_classification = "consistent" 
+        variability_description = "Temperature relatively consistent"
+    elif temp_coefficient_variation < 15:
+        variability_classification = "moderate"
+        variability_description = "Moderate temperature variability"
+    else:
+        variability_classification = "high"
+        variability_description = "High temperature variability between years"
     
     # Velocidade média do vento
     avg_wind_speed = round(df['wind_speed'].mean(), 2)
@@ -191,7 +212,14 @@ def calculate_climate_statistics(df: pd.DataFrame, lat: float, lon: float) -> di
             },
             "variability_analysis": {
                 "coefficient_of_variation": round((temp_std_dev / avg_max_temp) * 100, 2) if avg_max_temp > 0 else 0,
-                "temperature_range_c": round(record_max_temp - record_min_temp, 2)
+                "temperature_range_c": round(record_max_temp - record_min_temp, 2),
+                "yearly_variability": {
+                    "std_dev_c": yearly_temp_variability,
+                    "coefficient_variation_percent": temp_coefficient_variation,
+                    "classification": variability_classification,
+                    "description": variability_description,
+                    "interpretation": f"Temperature varies by ±{yearly_temp_variability}°C on average from year to year"
+                }
             },
             "trend": {
                 "slope": trend_slope,
@@ -245,4 +273,4 @@ def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float) ->
     except ValueError as e:
         return {"error": str(e)}
     except Exception as e:
-        return {"error": f"Erro inesperado durante a análise: {str(e)}"}
+        return {"error": f"Unexpected error during analysis: {str(e)}"}

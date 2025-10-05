@@ -52,6 +52,15 @@ class HumidityProbability(BaseModel):
 class VariabilityAnalysis(BaseModel):
     coefficient_of_variation: float
     temperature_range_c: float
+    yearly_variability: 'YearlyVariability'
+
+
+class YearlyVariability(BaseModel):
+    std_dev_c: float
+    coefficient_variation_percent: float
+    classification: str
+    description: str
+    interpretation: str
 
 
 class TemperatureTrend(BaseModel):
@@ -101,3 +110,7 @@ class ClimateAnalysisResponse(BaseModel):
     wind: WindStats
     humidity: HumidityStats
     summary_statistics: SummaryStatistics
+
+
+# Resolve forward references
+VariabilityAnalysis.model_rebuild()
