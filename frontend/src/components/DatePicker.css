@@ -1,0 +1,89 @@
+.date-picker {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.date-title {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date-instruction {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.date-selectors {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.selector-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.selector-group label {
+  font-weight: 500;
+  color: #34495e;
+  font-size: 0.95rem;
+}
+
+.date-select {
+  padding: 0.75rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.date-select:hover {
+  border-color: #bdc3c7;
+}
+
+.date-select:focus {
+  outline: none;
+  border-color: #5a6c7d;
+}
+
+.date-info {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.date-info p {
+  margin: 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.date-info p:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
+.date-note {
+  font-size: 0.85rem !important;
+  color: #7f8c8d !important;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .date-selectors {
+    grid-template-columns: 1fr;
+  }
+}

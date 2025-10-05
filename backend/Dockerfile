@@ -1,0 +1,16 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Expose port (Cloud Run uses PORT env variable, defaults to 8080)
+EXPOSE 8080
+
+# Run the application - use PORT environment variable from Cloud Run
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}
