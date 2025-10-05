@@ -1,9 +1,8 @@
 import axios from 'axios';
 import type { ClimateAnalysisResponse, AdditionalParameterType } from '../types/climate';
 
-// Use environment variable or default to localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-// Production: 'https://cascao-backend-880627998185.us-central1.run.app'
+// Use environment variable or default to production
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://cascao-backend-880627998185.us-central1.run.app';
 
 export interface ClimateQueryParams {
   lat: number;
