@@ -24,7 +24,7 @@ LIMITED_DATA_MIN_YEARS=10
 CORS_ORIGINS=http://localhost:5173,http://localhost:5174,https://your-frontend-url.run.app
 ```
 
-## 🌟 Additional Features
+## Additional Features
 
 ### Multiple Additional Parameters
 Select multiple optional climate parameters for deeper analysis:
@@ -86,13 +86,13 @@ GET /health
 - **Trend Analysis**: Long-term climate trends for your selected date
 - **Mobile Responsive**: Full functionality on desktop and mobile devices
 
-## 🚀 Live Application
+## Live Application
 
 **Frontend:** https://cascao-frontend-880627998185.us-central1.run.app
 
 **Backend API:** https://cascao-backend-880627998185.us-central1.run.app
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### Backend
 - **FastAPI** - Modern Python web framework
@@ -114,7 +114,7 @@ GET /health
 - **Docker** - Containerization
 - **Nginx** - Frontend web server
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 climate-analysis/
@@ -157,7 +157,7 @@ climate-analysis/
 └── README.md              # This file
 ```
 
-## 🏃 Local Development
+## Local Development
 
 ### Backend Setup
 
@@ -195,7 +195,7 @@ climate-analysis/
 
    Frontend will be available at: http://localhost:5173
 
-## 🌐 Deployment to Google Cloud
+## Deployment to Google Cloud
 
 ### Prerequisites
 - Google Cloud account with billing enabled
@@ -267,7 +267,7 @@ Once the backend is running, visit:
 curl "http://localhost:8000/v1/climate-analysis?lat=-9.665&lon=-35.735&day=4&month=10"
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### Backend Flow
 1. **API Request** → FastAPI endpoint receives location and date
@@ -289,7 +289,7 @@ curl "http://localhost:8000/v1/climate-analysis?lat=-9.665&lon=-35.735&day=4&mon
   - Coverage: Global
   - Time span: 1981 to near real-time
 
-## 🧪 Testing
+## Testing
 
 ### Backend Tests
 ```bash
@@ -304,7 +304,7 @@ cd frontend
 npm test
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -326,7 +326,7 @@ npm test
 - Increase `NASA_TIMEOUT` in backend `.env`
 - Check NASA POWER API status
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -336,7 +336,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 🔧 Configuration
+## Configuration
 
 ### Backend Environment Variables
 
@@ -355,11 +355,11 @@ PERCENTILE_HOT=75
 CORS_ORIGINS=http://localhost:5173,https://your-frontend-url.run.app
 \`\`\`
 
-## 📝 License
+## License
 
 This project is open source and available under the MIT License.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **NASA POWER** - For providing free access to historical climate data
 - **OpenStreetMap** - For map tiles and geocoding services
