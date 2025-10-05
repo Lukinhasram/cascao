@@ -1,0 +1,257 @@
+/* Shared styles for all data field components */
+
+.data-field {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-left: 5px solid #bdc3c7;
+}
+
+.data-field.temperature-field {
+  border-left-color: #7f8c8d;
+}
+
+.data-field.rain-field {
+  border-left-color: #95a5a6;
+}
+
+.data-field.wind-field {
+  border-left-color: #b0bec5;
+}
+
+.data-field.humidity-field {
+  border-left-color: #90a4ae;
+}
+
+.field-title {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Slider visualization */
+.slider-visualization {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.slider-label {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+}
+
+.slider-track {
+  position: relative;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  margin: 1rem 0;
+}
+
+.slider-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: #5a6c7d;
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.slider-range {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+
+/* Info panels */
+.info-panel {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+.info-panel.most-likely {
+  background: #fff9e6;
+  border: 2px solid #d4af37;
+}
+
+.info-panel.probability {
+  background: #e8f4f8;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.info-panel.trend {
+  background: #e8f5e9;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.info-panel.std-dev {
+  background: #ecf0f1;
+  border: 2px solid #bdc3c7;
+}
+
+.info-panel.stats-breakdown {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
+
+.panel-label {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+  text-transform: lowercase;
+}
+
+.panel-main-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.panel-comparison {
+  font-size: 1rem;
+  color: #555;
+  font-style: italic;
+}
+
+.panel-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.panel-content {
+  flex: 1;
+}
+
+.probability-text,
+.trend-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #34495e;
+}
+
+.panel-header {
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: #2c3e50;
+  text-transform: lowercase;
+}
+
+.panel-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #34495e;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.panel-stats {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.panel-stats > div {
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 6px;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.stat-detail {
+  font-size: 0.8rem;
+  color: #95a5a6;
+}
+
+/* Wind scale */
+.wind-scale {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.scale-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: white;
+  border-radius: 6px;
+  align-items: center;
+}
+
+.scale-range {
+  font-weight: bold;
+  color: #5a6c7d;
+  font-size: 0.9rem;
+}
+
+.scale-label {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .data-field {
+    padding: 1.5rem;
+  }
+
+  .field-title {
+    font-size: 1.3rem;
+  }
+
+  .panel-main-value {
+    font-size: 1.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
