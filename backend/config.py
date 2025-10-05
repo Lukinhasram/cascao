@@ -49,7 +49,7 @@ class Config:
     API_DESCRIPTION: str = os.getenv("API_DESCRIPTION", "Provides historical climate analysis for a specific date and location.")
     
     # CORS Configuration
-    CORS_ORIGINS: List[str] = os.getenv("CORS_ORIGINS", "http://localhost,http://localhost:3000,http://127.0.0.1:5500").split(",")
+    CORS_ORIGINS: List[str] = os.getenv("CORS_ORIGINS", "http://localhost:5173,https://cascao-frontend-880627998185.us-central1.run.app").split(",")
 
 
 # Create a singleton instance

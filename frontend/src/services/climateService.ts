@@ -1,8 +1,8 @@
 import axios from 'axios';
 import type { ClimateAnalysisResponse } from '../types/climate';
 
-// Use environment variable for API URL, fallback to localhost for development
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+// Production backend URL - CORRECT ONE
+const API_BASE_URL = 'https://cascao-backend-880627998185.us-central1.run.app';
 
 export interface ClimateQueryParams {
   lat: number;
@@ -33,16 +33,16 @@ export const climateService = {
           // Server responded with error status
           const detail = error.response.data?.detail || error.message;
           console.error('Server error response:', error.response.data);
-          throw new Error(`Erro do servidor: ${detail}`);
+          throw new Error(`Server error: ${detail}`);
         } else if (error.request) {
           // Request was made but no response received
           console.error('No response from server. Request:', error.request);
-          throw new Error('Não foi possível conectar ao servidor. Verifique se o backend está rodando em http://localhost:8000');
+          throw new Error('Could not connect to server. Please check if backend is running.');
         } else {
-          throw new Error(`Erro na requisição: ${error.message}`);
+          throw new Error(`Request error: ${error.message}`);
         }
       }
-      throw new Error('Erro desconhecido ao buscar dados climáticos');
+      throw new Error('Unknown error fetching climate data');
     }
   }
 };
