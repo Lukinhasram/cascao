@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import Optional
 
 
 # Modelos aninhados para uma estrutura mais limpa
@@ -28,13 +27,26 @@ class RainProbability(BaseModel):
     frequency_analysis: FrequencyAnalysis
 
 
-class TemperaturePercentiles(BaseModel):
-    percentile_10th_c: float = None
-    percentile_90th_c: float = None
+class TemperatureProbability(BaseModel):
+    hot_threshold_c: float
+    cold_threshold_c: float
+    hot_probability_percent: float
+    cold_probability_percent: float
+    hot_days_count: int
+    cold_days_count: int
+    normal_days_count: int
+    classification_method: str
 
-    class Config:
-        populate_by_name = True
-        extra = "allow"
+
+class HumidityProbability(BaseModel):
+    humid_threshold_percent: float
+    dry_threshold_percent: float
+    humid_probability_percent: float
+    dry_probability_percent: float
+    humid_days_count: int
+    dry_days_count: int
+    normal_days_count: int
+    classification_method: str
 
 
 class VariabilityAnalysis(BaseModel):
@@ -64,6 +76,15 @@ class WindStats(BaseModel):
     avg_speed_ms: float
 
 
+class HumidityStats(BaseModel):
+    avg_percent: float
+    min_percent: float
+    max_percent: float
+    std_dev: float
+    percentiles: dict
+    range_percent: float
+
+
 class SummaryStatistics(BaseModel):
     data_quality: str
     confidence_level: str
@@ -74,6 +95,9 @@ class ClimateAnalysisResponse(BaseModel):
     location: Location
     analysis_period: AnalysisPeriod
     rain_probability: RainProbability
+    temperature_probability: TemperatureProbability
+    humidity_probability: HumidityProbability
     temperature: TemperatureStats
     wind: WindStats
+    humidity: HumidityStats
     summary_statistics: SummaryStatistics

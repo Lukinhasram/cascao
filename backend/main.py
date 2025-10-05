@@ -38,7 +38,7 @@ async def get_climate_analysis(
     """
     Endpoint principal que retorna a análise climatológica completa.
     """
-    nasa_params = ["T2M_MAX", "T2M_MIN", "T2M", "PRECTOTCORR", "WS2M"]
+    nasa_params = ["T2M_MAX", "T2M_MIN", "T2M", "PRECTOTCORR", "WS2M", "RH2M"]
 
     try:
         # 1. Chama o serviço para buscar os dados da NASA

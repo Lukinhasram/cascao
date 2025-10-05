@@ -4,10 +4,21 @@ import numpy as np
 from scipy import stats
 
 
-def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float) -> dict:
-    # ... (o começo da função continua igual até o df_full.rename) ...
+def process_csv_data(list_of_csvs: list[str]) -> pd.DataFrame:
+    """
+    Process a list of CSV strings from NASA and return a cleaned DataFrame.
+    
+    Args:
+        list_of_csvs: List of CSV text strings with NASA data
+        
+    Returns:
+        pd.DataFrame: Cleaned and concatenated DataFrame with renamed columns
+        
+    Raises:
+        ValueError: If no valid data is found in the CSV files
+    """
     if not list_of_csvs:
-        return {"error": "A lista de CSVs da NASA chegou vazia."}
+        raise ValueError("A lista de CSVs da NASA chegou vazia.")
 
     list_of_dfs = []
     for i, csv_text in enumerate(list_of_csvs):
@@ -25,7 +36,7 @@ def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float) ->
             print(f"Erro ao processar o CSV #{i + 1}: {e}")
 
     if not list_of_dfs:
-        return {"error": "Nenhum dado válido foi encontrado nos arquivos da NASA após o processamento."}
+        raise ValueError("Nenhum dado válido foi encontrado nos arquivos da NASA após o processamento.")
 
     df_full = pd.concat(list_of_dfs, ignore_index=True).dropna()
 
@@ -34,22 +45,39 @@ def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float) ->
         'T2M_MIN': 'temp_min',
         'T2M': 'temp_avg',
         'PRECTOTCORR': 'precipitation',
-        'WS2M': 'wind_speed'
+        'WS2M': 'wind_speed',
+        'RH2M': 'humidity'
     }
     df_full.rename(columns=rename_map, inplace=True)
 
-    total_years = len(df_full)
-    if total_years == 0:
-        return {"error": "Nenhum dado válido restou após a limpeza de valores ausentes."}
+    if len(df_full) == 0:
+        raise ValueError("Nenhum dado válido restou após a limpeza de valores ausentes.")
+    
+    return df_full
+
+
+def calculate_climate_statistics(df: pd.DataFrame, lat: float, lon: float) -> dict:
+    """
+    Calculate comprehensive climate statistics from cleaned weather data.
+    
+    Args:
+        df: Cleaned DataFrame with weather data
+        lat: Latitude of the location
+        lon: Longitude of the location
+        
+    Returns:
+        dict: Dictionary containing all climate analysis results
+    """
+    total_years = len(df)
 
     # Cálculos de chuva
-    rainy_days = df_full[df_full['precipitation'] > 1.0].shape[0]
+    rainy_days = df[df['precipitation'] > 1.0].shape[0]
     rain_frequency_percent = round((rainy_days / total_years) * 100, 2)
 
     # Cálculos de temperatura
-    temp_max_values = df_full['temp_max']
-    temp_min_values = df_full['temp_min']
-    temp_avg_values = df_full['temp_avg']
+    temp_max_values = df['temp_max']
+    temp_min_values = df['temp_min']
+    temp_avg_values = df['temp_avg']
     
     # Estatísticas básicas de temperatura
     avg_max_temp = round(temp_max_values.mean(), 2)
@@ -64,16 +92,50 @@ def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float) ->
     temp_90th_percentile = round(np.percentile(temp_max_values, 90), 2)
     
     # Velocidade média do vento
-    avg_wind_speed = round(df_full['wind_speed'].mean(), 2)
+    avg_wind_speed = round(df['wind_speed'].mean(), 2)
+    
+    # Cálculos de umidade relativa
+    humidity_values = df['humidity']
+    avg_humidity = round(humidity_values.mean(), 2)
+    min_humidity = round(humidity_values.min(), 2)
+    max_humidity = round(humidity_values.max(), 2)
+    humidity_std_dev = round(humidity_values.std(), 2)
+    
+    # Percentis de umidade
+    humidity_10th_percentile = round(np.percentile(humidity_values, 10), 2)
+    humidity_90th_percentile = round(np.percentile(humidity_values, 90), 2)
+    
+    # Cálculos de probabilidade de clima quente/frio
+    # Usando os percentis 25 e 75 como thresholds para classificar temperaturas
+    temp_25th_percentile = np.percentile(temp_max_values, 25)
+    temp_75th_percentile = np.percentile(temp_max_values, 75)
+    
+    hot_days = df[df['temp_max'] > temp_75th_percentile].shape[0]
+    cold_days = df[df['temp_max'] < temp_25th_percentile].shape[0]
+    
+    hot_probability_percent = round((hot_days / total_years) * 100, 2)
+    cold_probability_percent = round((cold_days / total_years) * 100, 2)
+    
+    # Cálculos de probabilidade de clima úmido/seco
+    # Usando os percentis 25 e 75 como thresholds para classificar umidade
+    humidity_25th_percentile = np.percentile(humidity_values, 25)
+    humidity_75th_percentile = np.percentile(humidity_values, 75)
+    
+    humid_days = df[df['humidity'] > humidity_75th_percentile].shape[0]
+    dry_days = df[df['humidity'] < humidity_25th_percentile].shape[0]
+    
+    humid_probability_percent = round((humid_days / total_years) * 100, 2)
+    dry_probability_percent = round((dry_days / total_years) * 100, 2)
 
     # Tendência de temperatura (regressão linear)
     if total_years > 1:
-        slope, intercept, _, _, _ = stats.linregress(df_full['YEAR'], df_full['temp_max'])
+        regression_result = stats.linregress(df['YEAR'], df['temp_max'])  # type: ignore
+        slope = float(regression_result[0])  # First element is slope  # type: ignore
         trend_desc = "warming" if slope > 0.01 else "cooling" if slope < -0.01 else "stable"
         trend_slope = round(slope, 4)
     else:
         trend_desc = "insufficient data"
-        trend_slope = 0
+        trend_slope = 0.0
 
     analysis = {
         "location": {
@@ -81,8 +143,8 @@ def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float) ->
             "lon": lon,
         },
         "analysis_period": {
-            "start_year": int(df_full['YEAR'].min()),
-            "end_year": int(df_full['YEAR'].max()),
+            "start_year": int(df['YEAR'].min()),
+            "end_year": int(df['YEAR'].max()),
             "total_years_analyzed": total_years,
         },
         "rain_probability": {
@@ -95,6 +157,26 @@ def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float) ->
                 "total_days": total_years,
                 "percentage": rain_frequency_percent
             }
+        },
+        "temperature_probability": {
+            "hot_threshold_c": round(temp_75th_percentile, 2),
+            "cold_threshold_c": round(temp_25th_percentile, 2),
+            "hot_probability_percent": hot_probability_percent,
+            "cold_probability_percent": cold_probability_percent,
+            "hot_days_count": hot_days,
+            "cold_days_count": cold_days,
+            "normal_days_count": total_years - hot_days - cold_days,
+            "classification_method": "25th and 75th percentile thresholds"
+        },
+        "humidity_probability": {
+            "humid_threshold_percent": round(humidity_75th_percentile, 2),
+            "dry_threshold_percent": round(humidity_25th_percentile, 2),
+            "humid_probability_percent": humid_probability_percent,
+            "dry_probability_percent": dry_probability_percent,
+            "humid_days_count": humid_days,
+            "dry_days_count": dry_days,
+            "normal_days_count": total_years - humid_days - dry_days,
+            "classification_method": "25th and 75th percentile thresholds"
         },
         "temperature": {
             "avg_max_c": avg_max_temp,
@@ -120,9 +202,47 @@ def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float) ->
         "wind": {
             "avg_speed_ms": avg_wind_speed
         },
+        "humidity": {
+            "avg_percent": avg_humidity,
+            "min_percent": min_humidity,
+            "max_percent": max_humidity,
+            "std_dev": humidity_std_dev,
+            "percentiles": {
+                "10th_percentile_percent": humidity_10th_percentile,
+                "90th_percentile_percent": humidity_90th_percentile
+            },
+            "range_percent": round(max_humidity - min_humidity, 2)
+        },
         "summary_statistics": {
             "data_quality": "good" if total_years >= 20 else "limited" if total_years >= 10 else "insufficient",
             "confidence_level": "high" if total_years >= 25 else "medium" if total_years >= 15 else "low"
         }
     }
     return analysis
+
+
+def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float) -> dict:
+    """
+    Main function to process CSV data and perform climate analysis.
+    
+    Args:
+        list_of_csvs: List of CSV text strings with NASA data
+        lat: Latitude of the location
+        lon: Longitude of the location
+        
+    Returns:
+        dict: Dictionary containing all climate analysis results or error message
+    """
+    try:
+        # Process CSV data
+        df = process_csv_data(list_of_csvs)
+        
+        # Calculate statistics
+        analysis = calculate_climate_statistics(df, lat, lon)
+        
+        return analysis
+        
+    except ValueError as e:
+        return {"error": str(e)}
+    except Exception as e:
+        return {"error": f"Erro inesperado durante a análise: {str(e)}"}
