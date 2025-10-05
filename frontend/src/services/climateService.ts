@@ -17,7 +17,7 @@ export const climateService = {
    * Fetch climate analysis data from the backend API
    */
   async getClimateAnalysis(params: ClimateQueryParams): Promise<ClimateAnalysisResponse> {
-    console.log('🌍 Fetching climate data for:', params);
+    console.log('Fetching climate data for:', params);
     
     // Convert array of additional parameters to comma-separated string
     const queryParams: any = {
@@ -36,10 +36,10 @@ export const climateService = {
         `${API_BASE_URL}/v1/climate-analysis`,
         { params: queryParams }
       );
-      console.log('✅ Climate data received:', response.data);
+      console.log('Climate data received:', response.data);
       return response.data;
     } catch (error) {
-      console.error('❌ Error fetching climate data:', error);
+      console.error('Error fetching climate data:', error);
       
       if (axios.isAxiosError(error)) {
         if (error.response) {

@@ -45,11 +45,16 @@ class Config:
     
     # API Configuration
     API_VERSION: str = os.getenv("API_VERSION", "v1")
-    API_TITLE: str = os.getenv("API_TITLE", "Vai Chover no Meu Desfile? API")
+    API_TITLE: str = os.getenv("API_TITLE", "Climate Analysis API")
     API_DESCRIPTION: str = os.getenv("API_DESCRIPTION", "Provides historical climate analysis for a specific date and location.")
     
     # CORS Configuration
-    CORS_ORIGINS: List[str] = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:5174,https://cascao-frontend-880627998185.us-central1.run.app").split(",")
+    @property
+    def CORS_ORIGINS(self) -> List[str]:
+        cors_str = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:5174,https://cascao-frontend-880627998185.us-central1.run.app")
+        # Support both comma and semicolon separators for Cloud Run compatibility
+        separator = ";" if ";" in cors_str else ","
+        return [origin.strip() for origin in cors_str.split(separator)]
 
 
 # Create a singleton instance
