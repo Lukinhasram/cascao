@@ -4,3 +4,4 @@ httpx
 pandas
 numpy
 scipy
+python-dotenv
