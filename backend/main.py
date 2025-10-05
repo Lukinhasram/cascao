@@ -48,25 +48,50 @@ async def get_climate_analysis(
         lat: float = Query(..., description="Latitude", example=-9.665),
         lon: float = Query(..., description="Longitude", example=-35.735),
         day: int = Query(..., ge=1, le=31, description="Day of the month", example=4),
-        month: int = Query(..., ge=1, le=12, description="Month of the year", example=10)
+        month: int = Query(..., ge=1, le=12, description="Month of the year", example=10),
+        additional_parameters: str = Query(
+            "", 
+            description="Comma-separated list of additional parameters to analyze",
+            example="solar_radiation,cloud_cover"
+        )
 ):
     """
     Main endpoint that returns comprehensive climate analysis.
     
     This endpoint analyzes historical climate data for a specific date and location,
     providing probabilities and statistics for rain, temperature, humidity, and wind.
+    Optionally includes analysis of multiple additional parameters.
     """
     try:
+        # Determine which parameters to fetch from NASA
+        parameters = config.NASA_PARAMETERS.copy()
+        
+        # Parse additional parameters
+        requested_params = []
+        if additional_parameters:
+            requested_params = [p.strip() for p in additional_parameters.split(',') if p.strip()]
+        
+        # Add additional parameters if requested
+        if requested_params:
+            from analysis.additional_parameter_analyzer import PARAMETER_MAP
+            for param in requested_params:
+                if param in PARAMETER_MAP:
+                    nasa_param = PARAMETER_MAP[param]['nasa_param']
+                    if nasa_param not in parameters:
+                        parameters.append(nasa_param)
+        
         # 1. Call the service to fetch NASA data
         list_of_csvs = await get_historical_data_for_day(
-            lat, lon, config.NASA_PARAMETERS, month, day
+            lat, lon, parameters, month, day
         )
 
         if not list_of_csvs:
             raise InsufficientDataError("No historical data found for this location/date.")
 
         # 2. Call the analysis module to process the data
-        analysis_result = process_and_analyze_data(list_of_csvs, lat, lon)
+        analysis_result = process_and_analyze_data(
+            list_of_csvs, lat, lon, additional_parameters=requested_params
+        )
 
         if "error" in analysis_result:
             raise DataProcessingError(analysis_result["error"])

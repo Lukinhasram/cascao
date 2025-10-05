@@ -1,14 +1,16 @@
 import axios from 'axios';
-import type { ClimateAnalysisResponse } from '../types/climate';
+import type { ClimateAnalysisResponse, AdditionalParameterType } from '../types/climate';
 
-// Production backend URL - CORRECT ONE
-const API_BASE_URL = 'https://cascao-backend-880627998185.us-central1.run.app';
+// Use environment variable or default to localhost for development
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+// Production: 'https://cascao-backend-880627998185.us-central1.run.app'
 
 export interface ClimateQueryParams {
   lat: number;
   lon: number;
   day: number;
   month: number;
+  additional_parameters?: AdditionalParameterType[];
 }
 
 export const climateService = {
@@ -18,10 +20,22 @@ export const climateService = {
   async getClimateAnalysis(params: ClimateQueryParams): Promise<ClimateAnalysisResponse> {
     console.log('🌍 Fetching climate data for:', params);
     
+    // Convert array of additional parameters to comma-separated string
+    const queryParams: any = {
+      lat: params.lat,
+      lon: params.lon,
+      day: params.day,
+      month: params.month
+    };
+    
+    if (params.additional_parameters && params.additional_parameters.length > 0) {
+      queryParams.additional_parameters = params.additional_parameters.join(',');
+    }
+    
     try {
       const response = await axios.get<ClimateAnalysisResponse>(
         `${API_BASE_URL}/v1/climate-analysis`,
-        { params }
+        { params: queryParams }
       );
       console.log('✅ Climate data received:', response.data);
       return response.data;

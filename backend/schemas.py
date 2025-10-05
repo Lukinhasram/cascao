@@ -99,6 +99,17 @@ class SummaryStatistics(BaseModel):
     confidence_level: str
 
 
+class AdditionalParameterStats(BaseModel):
+    parameter_name: str
+    parameter_unit: str
+    avg_value: float
+    min_value: float
+    max_value: float
+    median_value: float
+    std_dev: float
+    percentiles: dict
+
+
 # Modelo principal da resposta da API
 class ClimateAnalysisResponse(BaseModel):
     location: Location
@@ -110,6 +121,7 @@ class ClimateAnalysisResponse(BaseModel):
     wind: WindStats
     humidity: HumidityStats
     summary_statistics: SummaryStatistics
+    additional_parameters: list[AdditionalParameterStats] | None = None
 
 
 # Resolve forward references

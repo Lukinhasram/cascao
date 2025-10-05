@@ -113,6 +113,31 @@ export interface ClimateAnalysisResponse {
   wind: WindStats;
   humidity: HumidityStats;
   summary_statistics: SummaryStatistics;
+  additional_parameters?: AdditionalParameterStats[];
+}
+
+// Additional parameter types
+export type AdditionalParameterType = 
+  | 'none'
+  | 'solar_radiation'
+  | 'cloud_cover'
+  | 'evapotranspiration'
+  | 'surface_pressure';
+
+export interface AdditionalParameterStats {
+  parameter_name: string;
+  parameter_unit: string;
+  avg_value: number;
+  min_value: number;
+  max_value: number;
+  median_value: number;
+  std_dev: number;
+  percentiles: {
+    "10th_percentile": number;
+    "25th_percentile": number;
+    "75th_percentile": number;
+    "90th_percentile": number;
+  };
 }
 
 // User input interface
@@ -121,4 +146,5 @@ export interface UserPreferences {
   idealRain: number;
   idealWindSpeed: number;
   idealHumidity: number;
+  additionalParameters: AdditionalParameterType[];
 }

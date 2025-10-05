@@ -54,7 +54,12 @@ def process_csv_data(list_of_csvs: list[str]) -> pd.DataFrame:
         'T2M': 'temp_avg',
         'PRECTOTCORR': 'precipitation',
         'WS2M': 'wind_speed',
-        'RH2M': 'humidity'
+        'RH2M': 'humidity',
+        # Additional parameters
+        'ALLSKY_SFC_SW_DWN': 'solar_radiation',
+        'CLOUD_AMT': 'cloud_cover',
+        'EVPTRNS': 'evapotranspiration',
+        'PS': 'surface_pressure'
     }
     df_full.rename(columns=rename_map, inplace=True)
 
@@ -65,7 +70,8 @@ def process_csv_data(list_of_csvs: list[str]) -> pd.DataFrame:
 
 
 def calculate_climate_statistics(df: pd.DataFrame, lat: float, lon: float, 
-                                analyzers: Optional[List[BaseAnalyzer]] = None) -> dict:
+                                analyzers: Optional[List[BaseAnalyzer]] = None,
+                                additional_parameters: Optional[List[str]] = None) -> dict:
     """
     Calculate comprehensive climate statistics using pluggable analyzers.
     
@@ -74,10 +80,14 @@ def calculate_climate_statistics(df: pd.DataFrame, lat: float, lon: float,
         lat: Latitude of the location
         lon: Longitude of the location
         analyzers: Optional list of analyzer instances to use
+        additional_parameters: Optional list of additional parameters to analyze
         
     Returns:
         dict: Dictionary containing all climate analysis results
     """
+    if additional_parameters is None:
+        additional_parameters = []
+    
     # Use default analyzers if none provided
     if analyzers is None:
         analyzers = [
@@ -89,6 +99,15 @@ def calculate_climate_statistics(df: pd.DataFrame, lat: float, lon: float,
             WindAnalyzer(),
             DataQualityAnalyzer()
         ]
+    
+    # Add additional parameter analyzers if requested
+    if additional_parameters:
+        from .additional_parameter_analyzer import AdditionalParameterAnalyzer
+        for param in additional_parameters:
+            try:
+                analyzers.append(AdditionalParameterAnalyzer(param))
+            except ValueError as e:
+                print(f"Warning: Could not add analyzer for {param}: {e}")
     
     # Base analysis structure
     analysis = {
@@ -102,6 +121,9 @@ def calculate_climate_statistics(df: pd.DataFrame, lat: float, lon: float,
             "total_years_analyzed": len(df),
         }
     }
+    
+    # Store additional parameter results
+    additional_results = []
     
     # Run each analyzer
     for analyzer in analyzers:
@@ -123,16 +145,26 @@ def calculate_climate_statistics(df: pd.DataFrame, lat: float, lon: float,
                 analysis["wind"] = result
             elif isinstance(analyzer, DataQualityAnalyzer):
                 analysis["summary_statistics"] = result
+            else:
+                # Handle additional parameter analyzers
+                from .additional_parameter_analyzer import AdditionalParameterAnalyzer
+                if isinstance(analyzer, AdditionalParameterAnalyzer):
+                    additional_results.append(result)
                 
         except Exception as e:
             print(f"Error in {analyzer.name}: {e}")
             # Continue with other analyzers
     
+    # Add additional parameters results if any
+    if additional_results:
+        analysis["additional_parameters"] = additional_results
+    
     return analysis
 
 
 def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float,
-                            analyzers: Optional[List[BaseAnalyzer]] = None) -> dict:
+                            analyzers: Optional[List[BaseAnalyzer]] = None,
+                            additional_parameters: Optional[List[str]] = None) -> dict:
     """
     Main function to process CSV data and perform climate analysis.
     
@@ -141,6 +173,7 @@ def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float,
         lat: Latitude of the location
         lon: Longitude of the location
         analyzers: Optional list of analyzer instances to use
+        additional_parameters: Optional list of additional parameters to analyze
         
     Returns:
         dict: Dictionary containing all climate analysis results or error message
@@ -150,7 +183,7 @@ def process_and_analyze_data(list_of_csvs: list[str], lat: float, lon: float,
         df = process_csv_data(list_of_csvs)
         
         # Calculate statistics using pluggable analyzers
-        analysis = calculate_climate_statistics(df, lat, lon, analyzers)
+        analysis = calculate_climate_statistics(df, lat, lon, analyzers, additional_parameters)
         
         return analysis
         

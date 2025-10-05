@@ -1,5 +1,5 @@
-import React from 'react';
-import type { UserPreferences } from '../types/climate';
+import React, { useState } from 'react';
+import type { UserPreferences, AdditionalParameterType } from '../types/climate';
 import './UserInputForm.css';
 
 interface UserInputFormProps {
@@ -15,6 +15,8 @@ const UserInputForm: React.FC<UserInputFormProps> = ({
   onSubmit,
   loading
 }) => {
+  const [selectedParameter, setSelectedParameter] = useState<AdditionalParameterType>('none');
+
   const handleSliderChange = (field: keyof UserPreferences, value: number) => {
     onPreferencesChange({
       ...preferences,
@@ -22,9 +24,93 @@ const UserInputForm: React.FC<UserInputFormProps> = ({
     });
   };
 
+  const handleAddParameter = () => {
+    if (selectedParameter !== 'none' && !preferences.additionalParameters.includes(selectedParameter)) {
+      onPreferencesChange({
+        ...preferences,
+        additionalParameters: [...preferences.additionalParameters, selectedParameter]
+      });
+      setSelectedParameter('none');
+    }
+  };
+
+  const handleRemoveParameter = (paramToRemove: AdditionalParameterType) => {
+    onPreferencesChange({
+      ...preferences,
+      additionalParameters: preferences.additionalParameters.filter(p => p !== paramToRemove)
+    });
+  };
+
+  const getParameterDisplayName = (param: AdditionalParameterType): string => {
+    const names: Record<AdditionalParameterType, string> = {
+      'none': 'None',
+      'solar_radiation': 'Solar Radiation',
+      'cloud_cover': 'Cloud Cover',
+      'evapotranspiration': 'Evapotranspiration',
+      'surface_pressure': 'Surface Pressure'
+    };
+    return names[param];
+  };
+
   return (
     <div className="user-input-form">
       <h2>Configure Your Ideal Preferences</h2>
+
+      {/* Additional Parameter Selector */}
+      <div className="input-group parameter-selector">
+        <label htmlFor="additional-parameter">
+          <span className="label-text">Additional Parameters (Optional)</span>
+        </label>
+        <div className="parameter-select-row">
+          <select
+            id="additional-parameter"
+            value={selectedParameter}
+            onChange={(e) => setSelectedParameter(e.target.value as AdditionalParameterType)}
+            className="parameter-dropdown"
+          >
+            <option value="none">Select a parameter...</option>
+            <option value="solar_radiation" disabled={preferences.additionalParameters.includes('solar_radiation')}>
+              Solar Radiation
+            </option>
+            <option value="cloud_cover" disabled={preferences.additionalParameters.includes('cloud_cover')}>
+              Cloud Cover
+            </option>
+            <option value="evapotranspiration" disabled={preferences.additionalParameters.includes('evapotranspiration')}>
+              Evapotranspiration
+            </option>
+            <option value="surface_pressure" disabled={preferences.additionalParameters.includes('surface_pressure')}>
+              Surface Pressure
+            </option>
+          </select>
+          <button
+            type="button"
+            onClick={handleAddParameter}
+            disabled={selectedParameter === 'none'}
+            className="add-parameter-btn"
+          >
+            Add
+          </button>
+        </div>
+        
+        {/* Selected Parameters Tags */}
+        {preferences.additionalParameters.length > 0 && (
+          <div className="parameter-tags">
+            {preferences.additionalParameters.map((param) => (
+              <div key={param} className="parameter-tag">
+                <span>{getParameterDisplayName(param)}</span>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveParameter(param)}
+                  className="remove-tag-btn"
+                  aria-label={`Remove ${getParameterDisplayName(param)}`}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       
       <div className="input-group">
         <label htmlFor="temperature-slider">
