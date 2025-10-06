@@ -195,7 +195,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Team
 
-Created for the NASA Space Apps Challenge 2024.
+Carlos Emanuel, Gabriela Cota, Geovane Ventura, Jéssica Pereira, Lucas Ramos.
 
 ## Acknowledgments
 
